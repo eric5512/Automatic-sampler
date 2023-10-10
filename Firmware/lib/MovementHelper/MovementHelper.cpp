@@ -7,7 +7,6 @@ MovementHelper* MovementHelper::get_instance() {
 }
 
 bool MovementHelper::move(const Motor& mot, const Direction& dir) {
-    DRV8822_IF *motor;
     switch (mot) {
     case MOT_X:
         return this->motor_x.move(dir, false);
@@ -41,7 +40,7 @@ void MovementHelper::origin() {
     while (this->final_x()) {
         this->motor_x.move(CCW, true);
     }
-    this->motor_y.move(CW, true);
+    this->motor_x.move(CW, true);
 
     while (this->final_y()) {
         this->motor_y.move(CCW, true);
@@ -61,13 +60,13 @@ void MovementHelper::origin() {
 }
 
 bool MovementHelper::final_x() {
-    return digitalRead(PIN_BTN_X);
+    return this->motor_x.final_mot();
 }
 
 bool MovementHelper::final_y() {
-    return digitalRead(PIN_BTN_Y);
+    return this->motor_y.final_mot();
 }
 
 bool MovementHelper::final_z() {
-    return digitalRead(PIN_BTN_Z);
+    return this->motor_z.final_mot();
 }

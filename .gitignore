@@ -39,6 +39,7 @@
 *.kicad_sch-bak
 *.kicad_prl
 *.sch-bak
+*-backups
 *~
 _autosave-*
 *.tmp
@@ -48,3 +49,8 @@ fp-info-cache
 
 # Netlist files (exported from Eeschema)
 *.net
+
+# VSCode
+.vscode
+Firmware/.vscode/*
+Firmware/.pio/*

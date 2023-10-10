@@ -24,13 +24,17 @@ private:
     uint32_t MAX_POS_Z = 100;
 
     struct DRV8822_IF {
-        uint8_t dir, st, en;
+        uint8_t dir, st, en, end;
         uint32_t pos, max_pos;
-        DRV8822_IF(uint8_t c_dir, uint8_t c_st, uint8_t c_en, uint32_t c_max_pos) : 
-            dir(c_dir), st(c_st), en(c_en), pos(0), max_pos(c_max_pos) {
+        DRV8822_IF(uint8_t c_dir, uint8_t c_st, uint8_t c_en, uint8_t c_end, uint32_t c_max_pos) : 
+            dir(c_dir), st(c_st), en(c_en), end(c_end), pos(0), max_pos(c_max_pos) {
                 pinMode(dir, OUTPUT);
                 pinMode(st, OUTPUT);
                 pinMode(en, OUTPUT);
+
+                pinMode(end, INPUT_PULLUP);
+
+                digitalWrite(en, 1);
             };
 
         bool move(Direction rdir, bool cal) {
@@ -52,15 +56,19 @@ private:
 
             return true;
         }
+
+        bool final_mot() {
+            return !digitalRead(end);
+        }
     };
     
     DRV8822_IF motor_x, motor_y, motor_z;
 
     uint16_t pos_x, pos_y, pos_z;
     
-    MovementHelper() : motor_x(PIN_DIR, PIN_ST, PIN_EN_X, MAX_POS_X),
-                       motor_y(PIN_DIR, PIN_ST, PIN_EN_Y, MAX_POS_Y),
-                       motor_z(PIN_DIR, PIN_ST, PIN_EN_Z, MAX_POS_Z),
+    MovementHelper() : motor_x(PIN_DIR, PIN_ST, PIN_EN_X, PIN_BTN_X, MAX_POS_X),
+                       motor_y(PIN_DIR, PIN_ST, PIN_EN_Y, PIN_BTN_Y, MAX_POS_Y),
+                       motor_z(PIN_DIR, PIN_ST, PIN_EN_Z, PIN_BTN_Z, MAX_POS_Z),
                        pos_x(0), pos_y(0), pos_z(0) {};
 
     MovementHelper(MovementHelper& other) = delete;

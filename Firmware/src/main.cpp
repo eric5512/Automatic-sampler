@@ -16,7 +16,7 @@ Screen screen = Screen();
 
 MovementHelper *mh = MovementHelper::get_instance();
 
-Movement mov;
+MovementInfo mov;
 
 void setup() {
   screen.print_wrapped("Initializing...");
@@ -45,7 +45,8 @@ void setup() {
 void loop() {}
 
 void automatic_movement() {
-
+  delay(1000);
+  screen.print_wrapped("Not implemented");
 }
 
 void manual_movement() {

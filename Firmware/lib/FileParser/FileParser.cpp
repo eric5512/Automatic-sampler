@@ -1,6 +1,6 @@
 #include "FileParser.h"
 
-bool parse_movement_file(Movement *mov) {
+bool parse_movement_file(MovementInfo *mov) {
     File file;
     char buffer[240];
 
