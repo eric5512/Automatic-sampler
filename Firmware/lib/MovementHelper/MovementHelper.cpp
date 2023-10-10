@@ -19,7 +19,7 @@ bool MovementHelper::move(const Motor& mot, const Direction& dir) {
     return false;
 }
 
-bool MovementHelper::move(const Motor& mot, const uint16_t coord) {
+bool MovementHelper::move(const Motor& mot, const coord_t coord) {
     return false; // TODO: move motor to coordinate
 }
 
