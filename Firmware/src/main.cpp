@@ -9,6 +9,7 @@ extern "C" {
   void loop();
 }
 
+bool button();
 void automatic_movement();
 void manual_movement();
 
@@ -19,27 +20,37 @@ MovementHelper *mh = MovementHelper::get_instance();
 MovementInfo mov;
 
 void setup() {
-  screen.print_wrapped("Initializing...");
+  // screen.print_wrapped("Initializing...");
   
-  pinMode(PIN_BTN, INPUT_PULLDOWN);
+  pinMode(PIN_BTN, INPUT_PULLUP);
 
-  if (!parse_movement_file(&mov)) {
-    screen.print_wrapped("Error, SD not connected or mov file not found");
-    while(1);
+  // if (!parse_movement_file(&mov)) {
+  //   screen.print_wrapped("Error, SD not connected or mov file not found");
+  //   while(1);
+  // }
+
+  // screen.print_wrapped(String("Measurement in ") + (mov.automatic ? "automatic" : "manual") + " mode");
+
+  screen.print_wrapped("Push to calibrate");
+
+  while(!button()); // Wait until the button is pressed
+
+  // mh->origin(); // Get all the motors to 0 position
+
+  // if (mov.automatic)
+  //   automatic_movement();
+  // else
+  //   manual_movement();
+
+  delay(2000);
+
+  coord_t mot_y = 0;
+  while (!button()) {
+    mh->motor_y.move(CW);
+    mot_y++;
   }
-
-  screen.print_wrapped(String("Measurement in ") + (mov.automatic ? "automatic" : "manual") + " mode");
-
-  while(!digitalRead(PIN_BTN)); // Wait until the button is pressed
-
-  mh->origin(); // Get all the motors to 0 position
-
-  if (mov.automatic)
-    automatic_movement();
-  else
-    manual_movement();
-
-  screen.print_wrapped("Done");
+  screen.cls();
+  screen.print_line(1, String(mot_y));
 }
 
 void loop() {}
@@ -54,9 +65,13 @@ void manual_movement() {
 
   for (size_t i = 0; i < mov.num_points; i++) {
     screen.print_line(1, String(i) + '/' + String(mov.num_points) + " points");
-    while(!digitalRead(PIN_BTN));
+    while(!button());
     mh->move(mov.manual_points[i]);
   }
 
   screen.print_wrapped("Done");
+}
+
+bool button() {
+  return !digitalRead(PIN_BTN);
 }

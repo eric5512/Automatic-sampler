@@ -7,21 +7,25 @@
 enum Motor { MOT_X, MOT_Y, MOT_Z };
 enum Direction { CW = 0, CCW = 1 };
 
+#define MOV_DELAY 1
+#define TICS_TO_MM 159
+
 class MovementHelper {
 private:
     const uint8_t PIN_ST    = 0;
     const uint8_t PIN_DIR   = 1;
-    const uint8_t PIN_EN_X  = 6;
+    const uint8_t PIN_EN_X  = 9;
     const uint8_t PIN_EN_Y  = 7;
-    const uint8_t PIN_EN_Z  = 9;
+    const uint8_t PIN_EN_Z  = 6;
 
     const uint8_t PIN_BTN_X = 16;
     const uint8_t PIN_BTN_Y = 17;
     const uint8_t PIN_BTN_Z = 22;
 
-    const uint32_t MAX_POS_X = 100;
-    const uint32_t MAX_POS_Y = 100;
-    uint32_t MAX_POS_Z = 100;
+    const coord_t MAX_POS_X = 400;
+    const coord_t MAX_POS_Y = 177;
+    coord_t MAX_POS_Z = 0;
+
 
     struct DRV8822_IF {
         uint8_t dir, st, en, end;
@@ -37,20 +41,36 @@ private:
                 digitalWrite(en, 1);
             };
 
-        bool move(Direction rdir, bool cal) {
-            if (!cal) {
-                if (rdir == CCW && this->pos >= max_pos 
-                || rdir == CW && this->pos <= 0) return false;
-
-                if (rdir == CCW) this->pos++;
-                else this->pos--;
-            }
-
+        void move(Direction rdir) {
             digitalWrite(dir, rdir);
             digitalWrite(en, 0);
 
             digitalWrite(st, 1);
+            delay(MOV_DELAY);
             digitalWrite(st, 0);
+            delay(MOV_DELAY);
+
+            digitalWrite(en, 1);
+        }
+
+        bool move_mm(Direction rdir, coord_t dist_mm) {
+            // if (rdir == CCW && this->pos >= max_pos 
+            //     || rdir == CW && this->pos <= 0) return false;
+
+            if (rdir == CCW) this->pos++;
+            else this->pos--;
+
+            digitalWrite(dir, rdir);
+            digitalWrite(en, 0);
+
+            for (coord_t j = 0; j < dist_mm; j++) {
+                for (uint8_t i = 0; i < TICS_TO_MM; i++) {
+                    digitalWrite(st, 1);
+                    delay(MOV_DELAY);
+                    digitalWrite(st, 0);
+                    delay(MOV_DELAY);
+                }
+            }
 
             digitalWrite(en, 1);
 
@@ -62,7 +82,6 @@ private:
         }
     };
     
-    DRV8822_IF motor_x, motor_y, motor_z;
 
     uint16_t pos_x, pos_y, pos_z;
     
@@ -73,12 +92,14 @@ private:
 
     MovementHelper(MovementHelper& other) = delete;
     MovementHelper operator=(MovementHelper& other) = delete;
+
 public:
+    DRV8822_IF motor_x, motor_y, motor_z;
     static MovementHelper* get_instance();
 
-    bool move(const Motor&, const Direction&);
+    bool move(const Motor&, const Direction&, const coord_t);
 
-    bool move(const Motor&, uint16_t);
+    bool move(const Motor&, const coord_t);
 
     bool move(const Point&);
 

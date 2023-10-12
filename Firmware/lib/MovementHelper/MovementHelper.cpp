@@ -6,14 +6,14 @@ MovementHelper* MovementHelper::get_instance() {
     return &mh;
 }
 
-bool MovementHelper::move(const Motor& mot, const Direction& dir) {
+bool MovementHelper::move(const Motor& mot, const Direction& dir, const coord_t qty) {
     switch (mot) {
     case MOT_X:
-        return this->motor_x.move(dir, false);
+        return this->motor_x.move_mm(dir, qty);
     case MOT_Y:
-        return this->motor_y.move(dir, false);
+        return this->motor_y.move_mm(dir, qty);
     case MOT_Z:
-        return this->motor_z.move(dir, false);
+        return this->motor_z.move_mm(dir, qty);
     }
 
     return false;
@@ -37,25 +37,28 @@ bool MovementHelper::move(const Point& point) {
 }
 
 void MovementHelper::origin() {
-    while (this->final_x()) {
-        this->motor_x.move(CCW, true);
-    }
-    this->motor_x.move(CW, true);
+    while (!this->final_x())
+        this->motor_x.move(CCW);
+    for (uint8_t i = 0; i < TICS_TO_MM; i++)
+        this->motor_x.move(CW);
 
-    while (this->final_y()) {
-        this->motor_y.move(CCW, true);
-    }
-    this->motor_y.move(CW, true);
+    while (!this->final_y())
+        this->motor_y.move(CCW);
+    for (uint8_t i = 0; i < TICS_TO_MM; i++)
+        this->motor_y.move(CW);
 
-    while (this->final_z()) {
-        this->motor_z.move(CW, true);
-    }
+    while (!this->final_z())
+        this->motor_z.move(CW);
+    for (uint8_t i = 0; i < TICS_TO_MM; i++)
+        this->motor_z.move(CCW);
+    
     uint32_t size_z = 0;
-    while (this->final_z()) {
-        this->motor_z.move(CCW, true);
+    while (!this->final_z()) {
+        this->motor_z.move(CCW);
         size_z++;
     }
-    this->motor_z.move(CW, true);
+
+    this->motor_z.move(CW);
     this->MAX_POS_Z = size_z;
 }
 
@@ -70,3 +73,6 @@ bool MovementHelper::final_y() {
 bool MovementHelper::final_z() {
     return this->motor_z.final_mot();
 }
+
+#undef MOV_DELAY
+#undef TICS_TO_MM
