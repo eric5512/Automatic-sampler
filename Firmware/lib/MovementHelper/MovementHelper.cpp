@@ -20,7 +20,27 @@ bool MovementHelper::move(const Motor& mot, const Direction& dir, const coord_t 
 }
 
 bool MovementHelper::move(const Motor& mot, const coord_t coord) {
-    return false; // TODO: move motor to coordinate
+    DRV8822_IF *moti;
+    switch (mot) {
+    case MOT_X:
+        moti = &this->motor_x;
+    case MOT_Y:
+        moti = &this->motor_y;
+    case MOT_Z:
+        moti = &this->motor_z;
+    }
+
+    Direction dir;
+    coord_t qty;
+    if (moti->pos > coord) {
+        dir = CCW;
+        qty = moti->pos - coord;
+    } else {
+        dir = CW;
+        qty = coord - moti->pos;
+    }
+    
+    return moti->move_mm(dir, qty);
 }
 
 bool MovementHelper::move(const Point& point) {
@@ -49,14 +69,14 @@ void MovementHelper::origin() {
 
     while (!this->final_z())
         this->motor_z.move(CW);
-    for (uint8_t i = 0; i < TICS_TO_MM; i++)
-        this->motor_z.move(CCW);
     
     uint32_t size_z = 0;
     while (!this->final_z()) {
         this->motor_z.move(CCW);
         size_z++;
     }
+    for (uint8_t i = 0; i < TICS_TO_MM; i++)
+        this->motor_x.move(CW);
 
     this->motor_z.move(CW);
     this->MAX_POS_Z = size_z;

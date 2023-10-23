@@ -13,7 +13,7 @@ bool button();
 void automatic_movement();
 void manual_movement();
 
-Screen screen = Screen();
+//Screen screen = Screen();
 
 MovementHelper *mh = MovementHelper::get_instance();
 
@@ -31,46 +31,39 @@ void setup() {
 
   // screen.print_wrapped(String("Measurement in ") + (mov.automatic ? "automatic" : "manual") + " mode");
 
-  screen.print_wrapped("Push to calibrate");
+  // while(!button()); // Wait until the button is pressed
 
-  while(!button()); // Wait until the button is pressed
-
-  // mh->origin(); // Get all the motors to 0 position
+  mh->origin(); // Get all the motors to 0 position
 
   // if (mov.automatic)
   //   automatic_movement();
   // else
   //   manual_movement();
 
-  delay(2000);
+  // delay(2000);
 
-  coord_t mot_y = 0;
-  while (!button()) {
-    mh->motor_y.move(CW);
-    mot_y++;
-  }
-  screen.cls();
-  screen.print_line(1, String(mot_y));
+  mh->move(MOT_X, CW, 399);
+  mh->move(MOT_Y, CW, 176);
 }
 
 void loop() {}
 
-void automatic_movement() {
-  delay(1000);
-  screen.print_wrapped("Not implemented");
-}
+// void automatic_movement() {
+//   delay(1000);
+//   screen.print_wrapped("Not implemented");
+// }
 
-void manual_movement() {
-  screen.print_line(0, "Press button to move");
+// void manual_movement() {
+//   screen.print_line(0, "Press button to move");
 
-  for (size_t i = 0; i < mov.num_points; i++) {
-    screen.print_line(1, String(i) + '/' + String(mov.num_points) + " points");
-    while(!button());
-    mh->move(mov.manual_points[i]);
-  }
+//   for (size_t i = 0; i < mov.num_points; i++) {
+//     screen.print_line(1, String(i) + '/' + String(mov.num_points) + " points");
+//     while(!button());
+//     mh->move(mov.manual_points[i]);
+//   }
 
-  screen.print_wrapped("Done");
-}
+//   screen.print_wrapped("Done");
+// }
 
 bool button() {
   return !digitalRead(PIN_BTN);
