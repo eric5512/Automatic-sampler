@@ -7,7 +7,9 @@
 enum Motor { MOT_X, MOT_Y, MOT_Z };
 enum Direction { CW = 0, CCW = 1 };
 
-#define MOV_DELAY 1
+#define DELAY_X 1
+#define DELAY_Y 1
+#define DELAY_Z 1
 #define TICS_TO_MM 159
 
 class MovementHelper {
@@ -28,10 +30,10 @@ private:
 
 
     struct DRV8822_IF {
-        uint8_t dir, st, en, end;
+        uint8_t dir, st, en, end, del;
         uint32_t pos, max_pos;
-        DRV8822_IF(uint8_t c_dir, uint8_t c_st, uint8_t c_en, uint8_t c_end, uint32_t c_max_pos) : 
-            dir(c_dir), st(c_st), en(c_en), end(c_end), pos(0), max_pos(c_max_pos) {
+        DRV8822_IF(uint8_t c_dir, uint8_t c_st, uint8_t c_en, uint8_t c_end, uint32_t c_max_pos, uint8_t c_del) : 
+            dir(c_dir), st(c_st), en(c_en), end(c_end), pos(0), max_pos(c_max_pos), del(c_del) {
                 pinMode(dir, OUTPUT);
                 pinMode(st, OUTPUT);
                 pinMode(en, OUTPUT);
@@ -42,13 +44,13 @@ private:
             };
 
         void move(Direction rdir) {
-            digitalWrite(dir, rdir);
-            digitalWrite(en, 0);
+            digitalWrite(this->dir, rdir);
+            digitalWrite(this->en, 0);
 
-            digitalWrite(st, 1);
-            delay(MOV_DELAY);
-            digitalWrite(st, 0);
-            delay(MOV_DELAY);
+            digitalWrite(this->st, 1);
+            delay(this->del);
+            digitalWrite(this->st, 0);
+            delay(this->del);
 
             digitalWrite(en, 1);
         }
@@ -66,9 +68,9 @@ private:
             for (coord_t j = 0; j < dist_mm; j++) {
                 for (uint8_t i = 0; i < TICS_TO_MM; i++) {
                     digitalWrite(st, 1);
-                    delay(MOV_DELAY);
+                    delay(this->del);
                     digitalWrite(st, 0);
-                    delay(MOV_DELAY);
+                    delay(this->del);
                 }
             }
 
@@ -85,9 +87,9 @@ private:
 
     uint16_t pos_x, pos_y, pos_z;
     
-    MovementHelper() : motor_x(PIN_DIR, PIN_ST, PIN_EN_X, PIN_BTN_X, MAX_POS_X),
-                       motor_y(PIN_DIR, PIN_ST, PIN_EN_Y, PIN_BTN_Y, MAX_POS_Y),
-                       motor_z(PIN_DIR, PIN_ST, PIN_EN_Z, PIN_BTN_Z, MAX_POS_Z),
+    MovementHelper() : motor_x(PIN_DIR, PIN_ST, PIN_EN_X, PIN_BTN_X, MAX_POS_X, DELAY_X),
+                       motor_y(PIN_DIR, PIN_ST, PIN_EN_Y, PIN_BTN_Y, MAX_POS_Y, DELAY_Y),
+                       motor_z(PIN_DIR, PIN_ST, PIN_EN_Z, PIN_BTN_Z, MAX_POS_Z, DELAY_Z),
                        pos_x(0), pos_y(0), pos_z(0) {};
 
     MovementHelper(MovementHelper& other) = delete;
