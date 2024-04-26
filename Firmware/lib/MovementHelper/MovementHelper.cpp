@@ -59,12 +59,12 @@ bool MovementHelper::move(const Point& point) {
 void MovementHelper::origin() {
     while (!this->final_x())
         this->motor_x.move(CCW);
-    for (uint8_t i = 0; i < TICS_TO_MM; i++)
+    for (uint8_t i = 0; i < TICS_TO_MM_X; i++)
         this->motor_x.move(CW);
 
     while (!this->final_y())
         this->motor_y.move(CCW);
-    for (uint8_t i = 0; i < TICS_TO_MM; i++)
+    for (uint8_t i = 0; i < TICS_TO_MM_Y; i++)
         this->motor_y.move(CW);
 
     while (!this->final_z())
@@ -75,7 +75,7 @@ void MovementHelper::origin() {
         this->motor_z.move(CCW);
         size_z++;
     }
-    for (uint8_t i = 0; i < TICS_TO_MM; i++)
+    for (uint8_t i = 0; i < TICS_TO_MM_Z; i++)
         this->motor_x.move(CW);
 
     this->motor_z.move(CW);
@@ -94,5 +94,9 @@ bool MovementHelper::final_z() {
     return this->motor_z.final_mot();
 }
 
-#undef MOV_DELAY
-#undef TICS_TO_MM
+#undef MOV_DELAY_X
+#undef MOV_DELAY_Y
+#undef MOV_DELAY_Z
+#undef TICS_TO_MM_X
+#undef TICS_TO_MM_Y
+#undef TICS_TO_MM_Z

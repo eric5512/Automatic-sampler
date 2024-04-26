@@ -42,8 +42,8 @@ void setup() {
 
   // delay(2000);
 
-  mh->move(MOT_X, CW, 399);
-  mh->move(MOT_Y, CW, 176);
+  //mh->move(MOT_X, CW, 399);
+  mh->move(MOT_Y, CW, 10);
 }
 
 void loop() {}
