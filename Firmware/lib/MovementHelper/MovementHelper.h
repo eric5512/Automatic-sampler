@@ -57,7 +57,7 @@ private:
             digitalWrite(en, 0);
 
             for (coord_t j = 0; j < dist_mm; j++) {
-                for (uint8_t i = 0; i < this->max_pos; i++) {
+                for (uint8_t i = 0; i < this->to_mm; i++) {
                     digitalWrite(st, 1);
                     delay(this->del);
                     digitalWrite(st, 0);

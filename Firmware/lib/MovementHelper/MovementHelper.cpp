@@ -76,9 +76,8 @@ void MovementHelper::origin() {
         size_z++;
     }
     for (uint8_t i = 0; i < TICS_TO_MM_Z; i++)
-        this->motor_x.move(CW);
+        this->motor_z.move(CW);
 
-    this->motor_z.move(CW);
     this->MAX_POS_Z = size_z;
 }
 
