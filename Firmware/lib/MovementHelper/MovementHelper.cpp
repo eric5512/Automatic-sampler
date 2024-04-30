@@ -69,7 +69,7 @@ void MovementHelper::origin() {
 
     while (!this->final_z())
         this->motor_z.move(CW);
-    
+    delay(500); // Delay because the button is connected to the same pin
     uint32_t size_z = 0;
     while (!this->final_z()) {
         this->motor_z.move(CCW);

@@ -10,7 +10,7 @@ enum Direction { CW = 0, CCW = 1 };
 #define DELAY_X 1
 #define DELAY_Y 1
 #define DELAY_Z 1
-#define TICS_TO_MM_X 159
+#define TICS_TO_MM_X 308
 #define TICS_TO_MM_Y 159
 #define TICS_TO_MM_Z 159
 
@@ -97,8 +97,8 @@ private:
     MovementHelper(MovementHelper& other) = delete;
     MovementHelper operator=(MovementHelper& other) = delete;
 
-public:
     DRV8822_IF motor_x, motor_y, motor_z;
+public:
     static MovementHelper* get_instance();
 
     bool move(const Motor&, const Direction&, const coord_t);
