@@ -24,10 +24,13 @@ bool MovementHelper::move(const Motor& mot, const coord_t coord) {
     switch (mot) {
     case MOT_X:
         moti = &this->motor_x;
+        break;
     case MOT_Y:
         moti = &this->motor_y;
+        break;
     case MOT_Z:
         moti = &this->motor_z;
+        break;
     }
 
     Direction dir;
@@ -59,26 +62,35 @@ bool MovementHelper::move(const Point& point) {
 void MovementHelper::origin() {
     while (!this->final_x())
         this->motor_x.move(CCW);
-    for (uint8_t i = 0; i < TICS_TO_MM_X; i++)
+    for (coord_t i = 0; i < TICS_TO_MM_X; i++)
         this->motor_x.move(CW);
 
     while (!this->final_y())
         this->motor_y.move(CCW);
-    for (uint8_t i = 0; i < TICS_TO_MM_Y; i++)
+    for (coord_t i = 0; i < TICS_TO_MM_Y; i++)
         this->motor_y.move(CW);
 
     while (!this->final_z())
         this->motor_z.move(CW);
+    for (coord_t i = 0; i < TICS_TO_MM_Z; i++)
+        this->motor_z.move(CCW);
+
     delay(500); // Delay because the button is connected to the same pin
-    uint32_t size_z = 0;
+    coord_t ticks_z = 0, size_z = 0;
+    
     while (!this->final_z()) {
         this->motor_z.move(CCW);
-        size_z++;
+        ticks_z++;
+        if (ticks_z >= TICS_TO_MM_Z) {
+            ticks_z = 0;
+            size_z++;
+        }
     }
-    for (uint8_t i = 0; i < TICS_TO_MM_Z; i++)
+    
+    for (coord_t i = 0; i < TICS_TO_MM_Z; i++)
         this->motor_z.move(CW);
 
-    this->MAX_POS_Z = size_z;
+    this->motor_z.max_pos = size_z;
 }
 
 bool MovementHelper::final_x() {
@@ -91,6 +103,12 @@ bool MovementHelper::final_y() {
 
 bool MovementHelper::final_z() {
     return this->motor_z.final_mot();
+}
+
+void MovementHelper::motor_pos(Point& p) {  
+    p.x = this->motor_x.pos;
+    p.y = this->motor_y.pos;
+    p.z = this->motor_z.pos;
 }
 
 #undef MOV_DELAY_X

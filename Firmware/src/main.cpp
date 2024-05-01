@@ -9,10 +9,15 @@ extern "C" {
 
 MovementHelper *mh = MovementHelper::get_instance();
 
+Point pos;
+
 void setup() {
   Serial.begin(BAUD_RATE); // Init serial communication
-
+  while (Serial.available() < 4);
+  Serial.read();
+  Serial.print("OK");
   mh->origin(); // Get all the motors to 0 position
+  Serial.print("CAL");
 }
 
 void loop() {
@@ -52,5 +57,6 @@ void loop() {
     }
 
     Serial.print(res ? '1' : '0');
+    mh->motor_pos(pos);
   }
 }

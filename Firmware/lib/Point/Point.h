@@ -2,7 +2,7 @@
 
 #include <inttypes.h>
 
-typedef uint16_t coord_t;
+typedef int16_t coord_t;
 
 struct Point {
     coord_t x;

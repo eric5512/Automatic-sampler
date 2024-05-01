@@ -10,9 +10,9 @@ enum Direction { CW = 0, CCW = 1 };
 #define DELAY_X 1
 #define DELAY_Y 1
 #define DELAY_Z 1
-#define TICS_TO_MM_X 308
+#define TICS_TO_MM_X 310
 #define TICS_TO_MM_Y 159
-#define TICS_TO_MM_Z 159
+#define TICS_TO_MM_Z 40
 
 class MovementHelper {
 private:
@@ -28,8 +28,6 @@ private:
 
     const coord_t MAX_POS_X = 400;
     const coord_t MAX_POS_Y = 163;
-    coord_t MAX_POS_Z = 0;
-
 
     struct DRV8822_IF {
         uint8_t dir, st, en, end, del;
@@ -47,8 +45,8 @@ private:
 
 
         bool move_mm(Direction rdir, coord_t dist_mm) {
-            if (rdir == CW && this->pos + dist_mm > max_pos 
-                || rdir == CCW && this->pos - dist_mm < 0) return false;
+            if (rdir == CW && this->pos + dist_mm > this->max_pos 
+                || rdir == CCW && this->pos < dist_mm) return false;
 
             if (rdir == CW) this->pos += dist_mm;
             else this->pos -= dist_mm;
@@ -57,7 +55,7 @@ private:
             digitalWrite(en, 0);
 
             for (coord_t j = 0; j < dist_mm; j++) {
-                for (uint8_t i = 0; i < this->to_mm; i++) {
+                for (coord_t i = 0; i < this->to_mm; i++) {
                     digitalWrite(st, 1);
                     delay(this->del);
                     digitalWrite(st, 0);
@@ -91,7 +89,7 @@ private:
     
     MovementHelper() : motor_x(PIN_DIR, PIN_ST, PIN_EN_X, PIN_BTN_X, MAX_POS_X, DELAY_X, TICS_TO_MM_X),
                        motor_y(PIN_DIR, PIN_ST, PIN_EN_Y, PIN_BTN_Y, MAX_POS_Y, DELAY_Y, TICS_TO_MM_Y),
-                       motor_z(PIN_DIR, PIN_ST, PIN_EN_Z, PIN_BTN_Z, MAX_POS_Z, DELAY_Z, TICS_TO_MM_Z),
+                       motor_z(PIN_DIR, PIN_ST, PIN_EN_Z, PIN_BTN_Z, 0, DELAY_Z, TICS_TO_MM_Z),
                        pos_x(0), pos_y(0), pos_z(0) {};
 
     MovementHelper(MovementHelper& other) = delete;
@@ -112,4 +110,7 @@ public:
     bool final_x();
     bool final_y();
     bool final_z();
+
+    
+    void motor_pos(Point& p);
 };
