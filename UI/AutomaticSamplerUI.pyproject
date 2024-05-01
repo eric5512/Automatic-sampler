@@ -1,0 +1,6 @@
+{
+    "files": [
+        "mainWindow.py",
+        "window.ui"
+    ]
+}
