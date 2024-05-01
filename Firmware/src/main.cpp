@@ -35,8 +35,8 @@ void loop() {
         break;
       
       default:
-        mot = MOT_X;
-        break;
+        Serial.print('0');
+        return;
     }
 
     coord_t dist;
@@ -51,6 +51,6 @@ void loop() {
       res = mh->move(mot, dist);
     }
 
-    Serial.print(res ? 1 : 0);
+    Serial.print(res ? '1' : '0');
   }
 }
