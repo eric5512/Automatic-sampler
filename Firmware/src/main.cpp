@@ -13,16 +13,27 @@ Point pos;
 
 void setup() {
   Serial.begin(BAUD_RATE); // Init serial communication
-  while (Serial.available() < 4);
-  Serial.read();
-  Serial.print("OK");
+  bool beg = false;
+  while (!beg) {
+    if (Serial.available() > 0) {
+      String msg = Serial.readString();
+      beg = msg == "INIT";
+    }
+  }
   mh->origin(); // Get all the motors to 0 position
-  Serial.print("CAL");
+  Serial.print('1');
 }
 
 void loop() {
   if (Serial.available() > 2) {
     String msg = Serial.readString();
+    
+    if (msg == "CAL") {
+      mh->origin();
+      Serial.print('1');
+      return;
+    }
+    
     Motor mot;
     bool res;
 

@@ -1,5 +1,6 @@
 import sys
 
+from PySide6.QtGui import QCloseEvent
 from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox
 
 # Important:
@@ -8,13 +9,37 @@ from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox
 #     pyside2-uic form.ui -o ui_form.py
 from ui_window import Ui_MainWindow
 
+from SerialInterface import Serial
 from connectWindow import ConnectWindow
+
+def create_error_box(title, text):
+    msg = QMessageBox()
+    msg.setIcon(QMessageBox.Critical)
+    msg.setWindowTitle(title)
+    msg.setText(text)
+    msg.exec_()
+
+def check_connected():
+    if  Serial.is_connected():
+        return True
+    create_error_box("Connection error", "Error: the device is not connected")
+    return False
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+    
+    def closeEvent(self, event: QCloseEvent) -> None:
+        if Serial.is_connected():
+            Serial.disconnect()
+        
+        return super().closeEvent(event)
+
+def display_response():
+    res = Serial.read()
+    ui.lineResponse.setText(res)
 
 def toggle_checkManualReading(state):
     nstate = not state
@@ -46,16 +71,48 @@ def toggle_checkBoxZ(state):
     ui.spinZPoints.setEnabled(state)
     calculate_total_points()
 
-def create_error_box(title, text):
-    msg = QMessageBox()
-    msg.setIcon(QMessageBox.Critical)
-    msg.setWindowTitle(title)
-    msg.setText(text)
-    msg.exec_()
-
 def click_actionConnect():
     con = ConnectWindow()
     con.exec()
+    
+def click_buttonMoveXRel():
+    if check_connected():
+        num = ui.spinRelativeX.value()
+        Serial.send(f"X{'+' if num > 0 else '-'}{num if num > 0 else -num}")
+        display_response()
+
+def click_buttonMoveYRel():
+    if check_connected():
+        num = ui.spinRelativeY.value()
+        Serial.send(f"Y{'+' if num > 0 else '-'}{num if num > 0 else -num}")
+        display_response()
+    
+def click_buttonMoveZRel():
+    if check_connected():
+        num = ui.spinRelativeZ.value()
+        Serial.send(f"Z{'+' if num > 0 else '-'}{num if num > 0 else -num}")
+        display_response()
+    
+def click_buttonMoveXAbs():
+    if check_connected():
+        Serial.send(f"X{ui.spinBoxAbsoluteX.value()}")
+        display_response()
+    
+def click_buttonMoveYAbs():
+    if check_connected():
+        Serial.send(f"Y{ui.spinBoxAbsoluteY.value()}")
+        display_response()
+    
+def click_buttonMoveZAbs():
+    if check_connected():
+        Serial.send(f"Z{ui.spinBoxAbsoluteZ.value()}")
+        display_response()
+    
+def click_buttonOrigin():
+    if check_connected():
+        Serial.send('CAL')
+        display_response()
+        
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
@@ -75,6 +132,15 @@ if __name__ == "__main__":
     ui.spinZPoints.valueChanged.connect(calculate_total_points)
 
     ui.actionConnect.triggered.connect(click_actionConnect)
+    
+    ui.buttonOrigin.clicked.connect(click_buttonOrigin)
+    
+    ui.pushButtonRelativeX.clicked.connect(click_buttonMoveXRel)
+    ui.pushButtonRelativeY.clicked.connect(click_buttonMoveYRel)
+    ui.pushButtonRelativeZ.clicked.connect(click_buttonMoveZRel)
+    ui.pushButtonAbsoluteX.clicked.connect(click_buttonMoveXAbs)
+    ui.pushButtonAbsoluteY.clicked.connect(click_buttonMoveYAbs)
+    ui.pushButtonAbsoluteZ.clicked.connect(click_buttonMoveZAbs)
 
     window.show()
 

@@ -16,8 +16,8 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QAbstractButton, QApplication, QComboBox, QDialog,
-    QDialogButtonBox, QLabel, QLineEdit, QSizePolicy,
-    QWidget)
+    QDialogButtonBox, QLabel, QLineEdit, QPushButton,
+    QSizePolicy, QWidget)
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -32,16 +32,19 @@ class Ui_Dialog(object):
         self.label = QLabel(Dialog)
         self.label.setObjectName(u"label")
         self.label.setGeometry(QRect(40, 70, 63, 20))
-        self.comboBox = QComboBox(Dialog)
-        self.comboBox.setObjectName(u"comboBox")
-        self.comboBox.setGeometry(QRect(100, 70, 82, 28))
+        self.comboDevice = QComboBox(Dialog)
+        self.comboDevice.setObjectName(u"comboDevice")
+        self.comboDevice.setGeometry(QRect(100, 70, 82, 28))
         self.label_2 = QLabel(Dialog)
         self.label_2.setObjectName(u"label_2")
         self.label_2.setGeometry(QRect(40, 110, 63, 20))
-        self.lineEdit = QLineEdit(Dialog)
-        self.lineEdit.setObjectName(u"lineEdit")
-        self.lineEdit.setGeometry(QRect(100, 110, 113, 28))
-        self.lineEdit.setReadOnly(True)
+        self.lineStatus = QLineEdit(Dialog)
+        self.lineStatus.setObjectName(u"lineStatus")
+        self.lineStatus.setGeometry(QRect(100, 110, 113, 28))
+        self.lineStatus.setReadOnly(True)
+        self.buttonConnect = QPushButton(Dialog)
+        self.buttonConnect.setObjectName(u"buttonConnect")
+        self.buttonConnect.setGeometry(QRect(190, 70, 75, 23))
 
         self.retranslateUi(Dialog)
         self.buttonBox.accepted.connect(Dialog.accept)
@@ -54,5 +57,6 @@ class Ui_Dialog(object):
         Dialog.setWindowTitle(QCoreApplication.translate("Dialog", u"Dialog", None))
         self.label.setText(QCoreApplication.translate("Dialog", u"Device", None))
         self.label_2.setText(QCoreApplication.translate("Dialog", u"Status", None))
+        self.buttonConnect.setText(QCoreApplication.translate("Dialog", u"Connect", None))
     # retranslateUi
 

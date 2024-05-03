@@ -248,11 +248,11 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout.addWidget(self.label)
 
-        self.lineEdit = QLineEdit(self.manual_tab)
-        self.lineEdit.setObjectName(u"lineEdit")
-        self.lineEdit.setReadOnly(True)
+        self.lineResponse = QLineEdit(self.manual_tab)
+        self.lineResponse.setObjectName(u"lineResponse")
+        self.lineResponse.setReadOnly(True)
 
-        self.horizontalLayout.addWidget(self.lineEdit)
+        self.horizontalLayout.addWidget(self.lineResponse)
 
 
         self.gridLayout_8.addLayout(self.horizontalLayout, 8, 0, 1, 1)
@@ -316,6 +316,11 @@ class Ui_MainWindow(object):
 
         self.gridLayout_8.addLayout(self.gridLayout_7, 3, 0, 1, 1)
 
+        self.buttonOrigin = QPushButton(self.manual_tab)
+        self.buttonOrigin.setObjectName(u"buttonOrigin")
+
+        self.gridLayout_8.addWidget(self.buttonOrigin, 4, 0, 1, 1)
+
         self.tabWidget.addTab(self.manual_tab, "")
         self.view_tab = QWidget()
         self.view_tab.setObjectName(u"view_tab")
@@ -351,7 +356,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 761, 25))
+        self.menubar.setGeometry(QRect(0, 0, 761, 21))
         self.menuFile = QMenu(self.menubar)
         self.menuFile.setObjectName(u"menuFile")
         MainWindow.setMenuBar(self.menubar)
@@ -363,7 +368,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -402,6 +407,7 @@ class Ui_MainWindow(object):
         self.pushButtonAbsoluteX.setText(QCoreApplication.translate("MainWindow", u"Move", None))
         self.pushButtonAbsoluteY.setText(QCoreApplication.translate("MainWindow", u"Move", None))
         self.pushButtonAbsoluteZ.setText(QCoreApplication.translate("MainWindow", u"Move", None))
+        self.buttonOrigin.setText(QCoreApplication.translate("MainWindow", u"Origin", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.manual_tab), QCoreApplication.translate("MainWindow", u"Manual", None))
         self.graphLoadFile.setText(QCoreApplication.translate("MainWindow", u"Load file", None))
         self.graphSelectFile.setText(QCoreApplication.translate("MainWindow", u"Select file", None))

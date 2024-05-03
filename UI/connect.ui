@@ -42,7 +42,7 @@
     <string>Device</string>
    </property>
   </widget>
-  <widget class="QComboBox" name="comboBox">
+  <widget class="QComboBox" name="comboDevice">
    <property name="geometry">
     <rect>
      <x>100</x>
@@ -65,7 +65,7 @@
     <string>Status</string>
    </property>
   </widget>
-  <widget class="QLineEdit" name="lineEdit">
+  <widget class="QLineEdit" name="lineStatus">
    <property name="geometry">
     <rect>
      <x>100</x>
@@ -76,6 +76,19 @@
    </property>
    <property name="readOnly">
     <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="buttonConnect">
+   <property name="geometry">
+    <rect>
+     <x>190</x>
+     <y>70</y>
+     <width>75</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Connect</string>
    </property>
   </widget>
  </widget>

@@ -23,7 +23,7 @@
          <enum>QTabWidget::Rounded</enum>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <property name="elideMode">
          <enum>Qt::ElideNone</enum>
@@ -333,7 +333,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="lineEdit">
+             <widget class="QLineEdit" name="lineResponse">
               <property name="readOnly">
                <bool>true</bool>
               </property>
@@ -418,6 +418,13 @@
             </item>
            </layout>
           </item>
+          <item row="4" column="0">
+           <widget class="QPushButton" name="buttonOrigin">
+            <property name="text">
+             <string>Origin</string>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
         <widget class="QWidget" name="view_tab">
@@ -459,7 +466,7 @@
      <x>0</x>
      <y>0</y>
      <width>761</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

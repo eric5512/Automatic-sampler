@@ -91,6 +91,10 @@ void MovementHelper::origin() {
         this->motor_z.move(CW);
 
     this->motor_z.max_pos = size_z;
+
+    this->motor_x.pos = 0;
+    this->motor_y.pos = 0;
+    this->motor_z.pos = 0;
 }
 
 bool MovementHelper::final_x() {
