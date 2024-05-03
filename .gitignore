@@ -54,3 +54,4 @@ fp-info-cache
 .vscode
 Firmware/.vscode/*
 Firmware/.pio/*
+*.pyc

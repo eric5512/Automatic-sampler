@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 12.0.2, 2024-05-02T01:05:06. -->
+<!-- Written by QtCreator 12.0.2, 2024-05-02T14:43:56. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -161,14 +161,14 @@
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="bool" key="PE.EnvironmentAspect.PrintOnRun">false</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">mainWindow.py</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/Eric/Documents/AutomaticSamplerUI/mainWindow.py</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/Eric/Documents/AutomaticSamplerUI/mainWindow.py</value>
-    <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">false</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\Eric\Documents\AutomaticSamplerUI\mainWindow.py</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">mainWindow.py2</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/Eric/Desktop/Programas/GitHub/Automatic-sampler/UI/mainWindow.py</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/Eric/Desktop/Programas/GitHub/Automatic-sampler/UI/mainWindow.py</value>
+    <value type="bool" key="ProjectExplorer.RunConfiguration.Customized">true</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\Eric\Desktop\Programas\GitHub\Automatic-sampler\UI\mainWindow.py</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Users/Eric/Documents/AutomaticSamplerUI</value>
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Users/Eric/Desktop/Programas/GitHub/Automatic-sampler/UI</value>
    </valuemap>
    <value type="qlonglong" key="ProjectExplorer.Target.RunConfigurationCount">2</value>
   </valuemap>

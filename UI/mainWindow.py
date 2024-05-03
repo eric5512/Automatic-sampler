@@ -8,6 +8,8 @@ from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox
 #     pyside2-uic form.ui -o ui_form.py
 from ui_window import Ui_MainWindow
 
+from connectWindow import ConnectWindow
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
@@ -51,6 +53,10 @@ def create_error_box(title, text):
     msg.setText(text)
     msg.exec_()
 
+def click_actionConnect():
+    con = ConnectWindow()
+    con.exec()
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 
@@ -68,6 +74,9 @@ if __name__ == "__main__":
     ui.spinYPoints.valueChanged.connect(calculate_total_points)
     ui.spinZPoints.valueChanged.connect(calculate_total_points)
 
+    ui.actionConnect.triggered.connect(click_actionConnect)
+
     window.show()
 
     sys.exit(app.exec())
+
