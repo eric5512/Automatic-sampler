@@ -21,7 +21,7 @@ class Serial:
         Serial._conn.write(data.encode("utf-8"))
         
     def read() -> str:
-        return Serial._conn.read_all().decode("utf-8")
+        return Serial._conn.read().decode("utf-8")
 
     def get_port_name() -> str:
         return Serial._conn.port
