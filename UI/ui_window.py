@@ -19,9 +19,9 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
 from PySide6.QtOpenGLWidgets import QOpenGLWidget
 from PySide6.QtWidgets import (QApplication, QCheckBox, QFormLayout, QGridLayout,
     QHBoxLayout, QLabel, QLineEdit, QMainWindow,
-    QMenu, QMenuBar, QPlainTextEdit, QPushButton,
-    QSizePolicy, QSpacerItem, QSpinBox, QTabWidget,
-    QWidget)
+    QMenu, QMenuBar, QPlainTextEdit, QProgressBar,
+    QPushButton, QSizePolicy, QSpacerItem, QSpinBox,
+    QTabWidget, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -42,6 +42,7 @@ class Ui_MainWindow(object):
         self.formLayout.setObjectName(u"formLayout")
         self.tabWidget = QTabWidget(self.centralwidget)
         self.tabWidget.setObjectName(u"tabWidget")
+        self.tabWidget.setEnabled(True)
         self.tabWidget.setTabShape(QTabWidget.Rounded)
         self.tabWidget.setElideMode(Qt.ElideNone)
         self.config_tab = QWidget()
@@ -169,6 +170,12 @@ class Ui_MainWindow(object):
         self.verticalSpacer_3 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.gridLayout_3.addItem(self.verticalSpacer_3, 10, 0, 1, 1)
+
+        self.progressBar = QProgressBar(self.config_tab)
+        self.progressBar.setObjectName(u"progressBar")
+        self.progressBar.setValue(0)
+
+        self.gridLayout_3.addWidget(self.progressBar, 14, 0, 1, 1)
 
         self.tabWidget.addTab(self.config_tab, "")
         self.manual_tab = QWidget()
@@ -368,7 +375,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)

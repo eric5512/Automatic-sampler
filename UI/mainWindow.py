@@ -37,10 +37,6 @@ class MainWindow(QMainWindow):
         
         return super().closeEvent(event)
 
-def display_response():
-    res = Serial.read()
-    ui.lineResponse.setText(res)
-
 def toggle_checkManualReading(state):
     nstate = not state
     ui.spinTotalPoints.setEnabled(nstate)
@@ -74,44 +70,35 @@ def toggle_checkBoxZ(state):
 def click_actionConnect():
     con = ConnectWindow()
     con.exec()
-    
-def click_buttonMoveXRel():
+
+def manual_movement(cmd):
     if check_connected():
-        num = ui.spinRelativeX.value()
-        Serial.send(f"X{'+' if num > 0 else '-'}{num if num > 0 else -num}")
-        display_response()
+        ui.lineResponse.setText("Moving...")
+        Serial.send_command(cmd, lambda s: ui.lineResponse.setText('OK' if s == '1' else 'NOK'))
+
+def click_buttonMoveXRel():
+    num = ui.spinRelativeX.value()
+    manual_movement(f"X{'+' if num > 0 else '-'}{num if num > 0 else -num}")
 
 def click_buttonMoveYRel():
-    if check_connected():
-        num = ui.spinRelativeY.value()
-        Serial.send(f"Y{'+' if num > 0 else '-'}{num if num > 0 else -num}")
-        display_response()
+    num = ui.spinRelativeY.value()
+    manual_movement(f"Y{'+' if num > 0 else '-'}{num if num > 0 else -num}")
     
 def click_buttonMoveZRel():
-    if check_connected():
-        num = ui.spinRelativeZ.value()
-        Serial.send(f"Z{'+' if num > 0 else '-'}{num if num > 0 else -num}")
-        display_response()
+    num = ui.spinRelativeZ.value()
+    manual_movement(f"Z{'+' if num > 0 else '-'}{num if num > 0 else -num}")
     
 def click_buttonMoveXAbs():
-    if check_connected():
-        Serial.send(f"X{ui.spinBoxAbsoluteX.value()}")
-        display_response()
+    manual_movement(f"X{ui.spinBoxAbsoluteX.value()}")
     
 def click_buttonMoveYAbs():
-    if check_connected():
-        Serial.send(f"Y{ui.spinBoxAbsoluteY.value()}")
-        display_response()
+    manual_movement(f"Y{ui.spinBoxAbsoluteY.value()}")
     
 def click_buttonMoveZAbs():
-    if check_connected():
-        Serial.send(f"Z{ui.spinBoxAbsoluteZ.value()}")
-        display_response()
+    manual_movement(f"Z{ui.spinBoxAbsoluteZ.value()}")
     
 def click_buttonOrigin():
-    if check_connected():
-        Serial.send('CAL')
-        display_response()
+    manual_movement("CAL")
         
 
 if __name__ == "__main__":
