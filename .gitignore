@@ -55,3 +55,7 @@ fp-info-cache
 Firmware/.vscode/*
 Firmware/.pio/*
 UI/__pycache__/*
+*.drl
+*.gbr
+*.dxf
+*.gbrjob
