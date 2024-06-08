@@ -59,3 +59,4 @@ UI/__pycache__/*
 *.gbr
 *.dxf
 *.gbrjob
+*.pyc

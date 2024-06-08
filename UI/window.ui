@@ -26,7 +26,7 @@
          <enum>QTabWidget::Rounded</enum>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <property name="elideMode">
          <enum>Qt::ElideNone</enum>
@@ -476,14 +476,15 @@
      <x>0</x>
      <y>0</y>
      <width>761</width>
-     <height>21</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionConnect"/>
+    <addaction name="actionConnectSensor"/>
+    <addaction name="actionConnectMachine"/>
     <addaction name="actionExit"/>
     <addaction name="actionHelp"/>
    </widget>
@@ -499,9 +500,14 @@
     <string>Help</string>
    </property>
   </action>
-  <action name="actionConnect">
+  <action name="actionConnectMachine">
    <property name="text">
-    <string>Connect</string>
+    <string>Connect machine</string>
+   </property>
+  </action>
+  <action name="actionConnectSensor">
+   <property name="text">
+    <string>Connect sensor</string>
    </property>
   </action>
  </widget>

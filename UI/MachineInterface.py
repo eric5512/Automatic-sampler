@@ -6,7 +6,7 @@ import time
 
 from typing import Callable
 
-class Serial:
+class Machine:
     _conn = None
     _sent = False
     
@@ -14,38 +14,38 @@ class Serial:
         return get_ports.comports()
     
     def is_connected() -> bool:
-        return False if Serial._conn == None else Serial._conn.is_open
+        return False if Machine._conn == None else Machine._conn.is_open
     
     def connect(port: str):
-        Serial._conn = serial.Serial(port)
-        Serial.send('INIT')
-        while Serial._conn.in_waiting < 1:
+        Machine._conn = serial.Serial(port)
+        Machine.send('INIT')
+        while Machine._conn.in_waiting < 1:
             pass
-        Serial.read()
+        Machine.read()
 
     def send(data: str):
-        Serial._conn.write(data.encode("utf-8"))
+        Machine._conn.write(data.encode("utf-8"))
         
     def read() -> str:
-        return Serial._conn.read().decode("utf-8")
+        return Machine._conn.read().decode("utf-8")
 
     def send_command(cmd: str, on_response: Callable[[str], None]):
-        if not Serial._sent:
+        if not Machine._sent:
             def aresponse():
-                while Serial._conn.in_waiting < 1:
+                while Machine._conn.in_waiting < 1:
                     time.sleep(0.1)
                 
-                on_response(Serial.read())
+                on_response(Machine.read())
                 
-                Serial._sent = False
+                Machine._sent = False
             
             t = threading.Thread(target=aresponse, args=[])
-            Serial._sent = True
-            Serial.send(cmd)
+            Machine._sent = True
+            Machine.send(cmd)
             t.start()
         
     def get_port_name() -> str:
-        return Serial._conn.port
+        return Machine._conn.port
     
     def disconnect():
-        Serial._conn.close()
+        Machine._conn.close()

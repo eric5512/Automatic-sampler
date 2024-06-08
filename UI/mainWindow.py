@@ -9,8 +9,8 @@ from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox
 #     pyside2-uic form.ui -o ui_form.py
 from ui_window import Ui_MainWindow
 
-from SerialInterface import Serial
-from connectWindow import ConnectWindow
+from MachineInterface import Machine
+from connectMachineWindow import ConnectMachineWindow
 
 def create_error_box(title, text):
     msg = QMessageBox()
@@ -20,7 +20,7 @@ def create_error_box(title, text):
     msg.exec_()
 
 def check_connected():
-    if  Serial.is_connected():
+    if  Machine.is_connected():
         return True
     create_error_box("Connection error", "Error: the device is not connected")
     return False
@@ -32,8 +32,8 @@ class MainWindow(QMainWindow):
         self.ui.setupUi(self)
     
     def closeEvent(self, event: QCloseEvent) -> None:
-        if Serial.is_connected():
-            Serial.disconnect()
+        if Machine.is_connected():
+            Machine.disconnect()
         
         return super().closeEvent(event)
 
@@ -67,14 +67,14 @@ def toggle_checkBoxZ(state):
     ui.spinZPoints.setEnabled(state)
     calculate_total_points()
 
-def click_actionConnect():
-    con = ConnectWindow()
+def click_actionConnectMachine():
+    con = ConnectMachineWindow()
     con.exec()
 
 def manual_movement(cmd):
     if check_connected():
         ui.lineResponse.setText("Moving...")
-        Serial.send_command(cmd, lambda s: ui.lineResponse.setText('OK' if s == '1' else 'NOK'))
+        Machine.send_command(cmd, lambda s: ui.lineResponse.setText('OK' if s == '1' else 'NOK'))
 
 def click_buttonMoveXRel():
     num = ui.spinRelativeX.value()
@@ -118,7 +118,8 @@ if __name__ == "__main__":
     ui.spinYPoints.valueChanged.connect(calculate_total_points)
     ui.spinZPoints.valueChanged.connect(calculate_total_points)
 
-    ui.actionConnect.triggered.connect(click_actionConnect)
+    ui.actionConnectMachine.triggered.connect(click_actionConnectMachine)
+    ui.actionConnectSensor.triggered.connect(click_actionConnectSensor)
     
     ui.buttonOrigin.clicked.connect(click_buttonOrigin)
     
