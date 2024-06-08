@@ -3,14 +3,13 @@ import sys
 from PySide6.QtGui import QCloseEvent
 from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox
 
-# Important:
-# You need to run the following command to generate the ui_form.py file
-#     pyside6-uic form.ui -o ui_form.py, or
-#     pyside2-uic form.ui -o ui_form.py
 from ui_window import Ui_MainWindow
 
 from MachineInterface import Machine
+from SensorInterface import EFSensor
+
 from connectMachineWindow import ConnectMachineWindow
+from connectSensorWindow import ConnectSensorWindow
 
 def create_error_box(title, text):
     msg = QMessageBox()
@@ -71,6 +70,10 @@ def click_actionConnectMachine():
     con = ConnectMachineWindow()
     con.exec()
 
+def click_actionConnectSensor():
+    con = ConnectSensorWindow()
+    con.exec()
+
 def manual_movement(cmd):
     if check_connected():
         ui.lineResponse.setText("Moving...")
@@ -129,6 +132,8 @@ if __name__ == "__main__":
     ui.pushButtonAbsoluteX.clicked.connect(click_buttonMoveXAbs)
     ui.pushButtonAbsoluteY.clicked.connect(click_buttonMoveYAbs)
     ui.pushButtonAbsoluteZ.clicked.connect(click_buttonMoveZAbs)
+
+    EFSensor.init()
 
     window.show()
 

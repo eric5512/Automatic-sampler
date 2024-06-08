@@ -1,26 +1,29 @@
 import ctypes
+import threading
 from ctypes import wintypes, POINTER, byref, create_string_buffer
 
 class EFSensor():
-    __slots__ = ("_library", "_HANDLE", "_connected")
+    _connected = False
+    _library = None
+    _handle = wintypes.HANDLE()
 
-    def __init__(self, dll_filepath: str) -> None:
-        self._library = ctypes.windll.LoadLibrary(dll_filepath)
+    def is_connected() -> bool:
+        return EFSensor._connected
 
-        self._library.PMM_CreateProbe.argtypes = [ctypes.c_char_p, POINTER(wintypes.HANDLE), ctypes.c_char_p]
-        self._library.PMM_CreateProbe.restype = ctypes.c_int
+    def init(dll_filepath: str) -> None:
+        EFSensor._library = ctypes.windll.LoadLibrary(dll_filepath)
 
-        self._library.PMM_ReadTotalField.argtypes = [wintypes.HANDLE, POINTER(ctypes.c_float)]
-        self._library.PMM_ReadTotalField.restype = ctypes.c_int
+        EFSensor._library.PMM_CreateProbe.argtypes = [ctypes.c_char_p, POINTER(wintypes.HANDLE), ctypes.c_char_p]
+        EFSensor._library.PMM_CreateProbe.restype = ctypes.c_int
 
-        self._library.PMM_ReadAxisField.argtypes = [wintypes.HANDLE, POINTER(ctypes.c_float), POINTER(ctypes.c_float), POINTER(ctypes.c_float)]
-        self._library.PMM_ReadAxisField.restype = ctypes.c_int
+        EFSensor._library.PMM_ReadTotalField.argtypes = [wintypes.HANDLE, POINTER(ctypes.c_float)]
+        EFSensor._library.PMM_ReadTotalField.restype = ctypes.c_int
 
-        self._library.PMM_SerialNumber.argtypes = [wintypes.HANDLE, ctypes.c_char_p, POINTER(ctypes.c_int)]
-        self._library.PMM_SerialNumber.restype = ctypes.c_int
+        EFSensor._library.PMM_ReadAxisField.argtypes = [wintypes.HANDLE, POINTER(ctypes.c_float), POINTER(ctypes.c_float), POINTER(ctypes.c_float)]
+        EFSensor._library.PMM_ReadAxisField.restype = ctypes.c_int
 
-    def is_connected(self) -> bool:
-        return self._connected
+        EFSensor._library.PMM_SerialNumber.argtypes = [wintypes.HANDLE, ctypes.c_char_p, POINTER(ctypes.c_int)]
+        EFSensor._library.PMM_SerialNumber.restype = ctypes.c_int
 
     def handle_code(code: int) -> None:
         match code:
@@ -62,42 +65,46 @@ class EFSensor():
                 raise RuntimeError("Error purging COMM port")
 
 
-    def connect(self, name: str, comm_port: str) -> None:
-        probe_handle = wintypes.HANDLE()
-
-        result = self._library.PMM_CreateProbe(name.encode('utf-8'), byref(probe_handle), comm_port.encode('utf-8'))
+    def connect(name: str, comm_port: str) -> None:
+        result = EFSensor._library.PMM_CreateProbe(name.encode('utf-8'), byref(EFSensor._handle), comm_port.encode('utf-8'))
         
         EFSensor.handle_code(result)
-
-        self._connected = True
-        self._HANDLE = probe_handle
+        EFSensor._connected = True
         
+    def _async(fun):
+        def wrapper(on_response):
+            t = threading.Thread(target=lambda: on_response(fun()), args=[])
+            t.start()
+        
+        return wrapper
 
-    def read_total_field(self, probe_handle: wintypes.HANDLE) -> float:
+    @_async
+    def read_total_field() -> float:
         xyz_field = ctypes.c_float()
 
-        result = self._library.PMM_ReadTotalField(probe_handle, byref(xyz_field))
+        result = EFSensor._library.PMM_ReadTotalField(EFSensor._handle, byref(xyz_field))
 
         EFSensor.handle_code(result)
 
         return xyz_field.value
 
-    def read_axis_field(self, probe_handle: wintypes.HANDLE) -> tuple[float, float, float]:
+    @_async
+    def read_axis_field() -> tuple[float, float, float]:
         x_field = ctypes.c_float()
         y_field = ctypes.c_float()
         z_field = ctypes.c_float()
 
-        result = self._library.PMM_ReadAxisField(probe_handle, byref(x_field), byref(y_field), byref(z_field))
+        result = EFSensor._library.PMM_ReadAxisField(EFSensor._handle, byref(x_field), byref(y_field), byref(z_field))
 
         EFSensor.handle_code(result)
 
         return x_field.value, y_field.value, z_field.value
     
-    def get_serial_number(self, probe_handle, buffer_size=256):
+    def get_serial_number(buffer_size=256):
         serial_number = create_string_buffer(buffer_size)
         array_size = ctypes.c_int(buffer_size)
 
-        result = self._library.PMM_SerialNumber(probe_handle, serial_number, byref(array_size))
+        result = EFSensor._library.PMM_SerialNumber(EFSensor._handle, serial_number, byref(array_size))
 
         EFSensor.handle_code(result)
 
