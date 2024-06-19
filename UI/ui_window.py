@@ -16,7 +16,6 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QIcon, QImage, QKeySequence, QLinearGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
-from PySide6.QtOpenGLWidgets import QOpenGLWidget
 from PySide6.QtWidgets import (QApplication, QCheckBox, QFormLayout, QGridLayout,
     QHBoxLayout, QLabel, QLineEdit, QMainWindow,
     QMenu, QMenuBar, QPlainTextEdit, QProgressBar,
@@ -27,7 +26,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(761, 572)
+        MainWindow.resize(865, 657)
         self.actionExit = QAction(MainWindow)
         self.actionExit.setObjectName(u"actionExit")
         self.actionHelp = QAction(MainWindow)
@@ -184,6 +183,18 @@ class Ui_MainWindow(object):
         self.manual_tab.setObjectName(u"manual_tab")
         self.gridLayout_8 = QGridLayout(self.manual_tab)
         self.gridLayout_8.setObjectName(u"gridLayout_8")
+        self.label_17 = QLabel(self.manual_tab)
+        self.label_17.setObjectName(u"label_17")
+        self.label_17.setAlignment(Qt.AlignCenter)
+
+        self.gridLayout_8.addWidget(self.label_17, 0, 0, 1, 1)
+
+        self.label_12 = QLabel(self.manual_tab)
+        self.label_12.setObjectName(u"label_12")
+        self.label_12.setAlignment(Qt.AlignCenter)
+
+        self.gridLayout_8.addWidget(self.label_12, 1, 0, 1, 1)
+
         self.gridLayout_4 = QGridLayout()
         self.gridLayout_4.setObjectName(u"gridLayout_4")
         self.pushButtonRelativeX = QPushButton(self.manual_tab)
@@ -238,39 +249,13 @@ class Ui_MainWindow(object):
         self.gridLayout_4.addWidget(self.pushButtonRelativeZ, 2, 2, 1, 1)
 
 
-        self.gridLayout_8.addLayout(self.gridLayout_4, 1, 0, 1, 1)
-
-        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.gridLayout_8.addItem(self.verticalSpacer, 5, 0, 1, 1)
+        self.gridLayout_8.addLayout(self.gridLayout_4, 2, 0, 1, 1)
 
         self.label_13 = QLabel(self.manual_tab)
         self.label_13.setObjectName(u"label_13")
         self.label_13.setAlignment(Qt.AlignCenter)
 
-        self.gridLayout_8.addWidget(self.label_13, 2, 0, 1, 1)
-
-        self.horizontalLayout = QHBoxLayout()
-        self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.label = QLabel(self.manual_tab)
-        self.label.setObjectName(u"label")
-
-        self.horizontalLayout.addWidget(self.label)
-
-        self.lineResponse = QLineEdit(self.manual_tab)
-        self.lineResponse.setObjectName(u"lineResponse")
-        self.lineResponse.setReadOnly(True)
-
-        self.horizontalLayout.addWidget(self.lineResponse)
-
-
-        self.gridLayout_8.addLayout(self.horizontalLayout, 8, 0, 1, 1)
-
-        self.label_12 = QLabel(self.manual_tab)
-        self.label_12.setObjectName(u"label_12")
-        self.label_12.setAlignment(Qt.AlignCenter)
-
-        self.gridLayout_8.addWidget(self.label_12, 0, 0, 1, 1)
+        self.gridLayout_8.addWidget(self.label_13, 3, 0, 1, 1)
 
         self.gridLayout_7 = QGridLayout()
         self.gridLayout_7.setObjectName(u"gridLayout_7")
@@ -323,37 +308,122 @@ class Ui_MainWindow(object):
         self.gridLayout_7.addWidget(self.pushButtonAbsoluteZ, 2, 2, 1, 1)
 
 
-        self.gridLayout_8.addLayout(self.gridLayout_7, 3, 0, 1, 1)
+        self.gridLayout_8.addLayout(self.gridLayout_7, 4, 0, 1, 1)
 
         self.buttonOrigin = QPushButton(self.manual_tab)
         self.buttonOrigin.setObjectName(u"buttonOrigin")
 
-        self.gridLayout_8.addWidget(self.buttonOrigin, 4, 0, 1, 1)
+        self.gridLayout_8.addWidget(self.buttonOrigin, 5, 0, 1, 1)
+
+        self.horizontalLayout = QHBoxLayout()
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.label = QLabel(self.manual_tab)
+        self.label.setObjectName(u"label")
+
+        self.horizontalLayout.addWidget(self.label)
+
+        self.lineResponse = QLineEdit(self.manual_tab)
+        self.lineResponse.setObjectName(u"lineResponse")
+        self.lineResponse.setReadOnly(True)
+
+        self.horizontalLayout.addWidget(self.lineResponse)
+
+
+        self.gridLayout_8.addLayout(self.horizontalLayout, 6, 0, 1, 1)
+
+        self.label_18 = QLabel(self.manual_tab)
+        self.label_18.setObjectName(u"label_18")
+        self.label_18.setAlignment(Qt.AlignCenter)
+
+        self.gridLayout_8.addWidget(self.label_18, 8, 0, 1, 1)
+
+        self.buttonReadSensor = QPushButton(self.manual_tab)
+        self.buttonReadSensor.setObjectName(u"buttonReadSensor")
+
+        self.gridLayout_8.addWidget(self.buttonReadSensor, 9, 0, 1, 1)
+
+        self.horizontalLayout_4 = QHBoxLayout()
+        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
+        self.label_21 = QLabel(self.manual_tab)
+        self.label_21.setObjectName(u"label_21")
+
+        self.horizontalLayout_4.addWidget(self.label_21)
+
+        self.lineSensorTotal = QLineEdit(self.manual_tab)
+        self.lineSensorTotal.setObjectName(u"lineSensorTotal")
+        self.lineSensorTotal.setReadOnly(True)
+
+        self.horizontalLayout_4.addWidget(self.lineSensorTotal)
+
+
+        self.gridLayout_8.addLayout(self.horizontalLayout_4, 10, 0, 1, 1)
+
+        self.horizontalLayout_5 = QHBoxLayout()
+        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
+        self.label_22 = QLabel(self.manual_tab)
+        self.label_22.setObjectName(u"label_22")
+
+        self.horizontalLayout_5.addWidget(self.label_22)
+
+        self.lineSensorX = QLineEdit(self.manual_tab)
+        self.lineSensorX.setObjectName(u"lineSensorX")
+        self.lineSensorX.setReadOnly(True)
+
+        self.horizontalLayout_5.addWidget(self.lineSensorX)
+
+
+        self.gridLayout_8.addLayout(self.horizontalLayout_5, 11, 0, 1, 1)
+
+        self.horizontalLayout_6 = QHBoxLayout()
+        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
+        self.label_23 = QLabel(self.manual_tab)
+        self.label_23.setObjectName(u"label_23")
+
+        self.horizontalLayout_6.addWidget(self.label_23)
+
+        self.lineSensorY = QLineEdit(self.manual_tab)
+        self.lineSensorY.setObjectName(u"lineSensorY")
+        self.lineSensorY.setReadOnly(True)
+
+        self.horizontalLayout_6.addWidget(self.lineSensorY)
+
+
+        self.gridLayout_8.addLayout(self.horizontalLayout_6, 12, 0, 1, 1)
+
+        self.horizontalLayout_7 = QHBoxLayout()
+        self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
+        self.label_24 = QLabel(self.manual_tab)
+        self.label_24.setObjectName(u"label_24")
+
+        self.horizontalLayout_7.addWidget(self.label_24)
+
+        self.lineSensorZ = QLineEdit(self.manual_tab)
+        self.lineSensorZ.setObjectName(u"lineSensorZ")
+        self.lineSensorZ.setReadOnly(True)
+
+        self.horizontalLayout_7.addWidget(self.lineSensorZ)
+
+
+        self.gridLayout_8.addLayout(self.horizontalLayout_7, 13, 0, 1, 1)
+
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_8.addItem(self.verticalSpacer, 7, 0, 1, 1)
 
         self.tabWidget.addTab(self.manual_tab, "")
         self.view_tab = QWidget()
         self.view_tab.setObjectName(u"view_tab")
         self.gridLayout_2 = QGridLayout(self.view_tab)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
-        self.graphic = QOpenGLWidget(self.view_tab)
-        self.graphic.setObjectName(u"graphic")
-
-        self.gridLayout_2.addWidget(self.graphic, 1, 0, 1, 3)
-
-        self.graphFilePath = QLineEdit(self.view_tab)
-        self.graphFilePath.setObjectName(u"graphFilePath")
-
-        self.gridLayout_2.addWidget(self.graphFilePath, 0, 0, 1, 1)
-
-        self.graphLoadFile = QPushButton(self.view_tab)
-        self.graphLoadFile.setObjectName(u"graphLoadFile")
-
-        self.gridLayout_2.addWidget(self.graphLoadFile, 0, 2, 1, 1)
-
         self.graphSelectFile = QPushButton(self.view_tab)
         self.graphSelectFile.setObjectName(u"graphSelectFile")
 
         self.gridLayout_2.addWidget(self.graphSelectFile, 0, 1, 1, 1)
+
+        self.graph = QGridLayout()
+        self.graph.setObjectName(u"graph")
+
+        self.gridLayout_2.addLayout(self.graph, 1, 0, 1, 3)
 
         self.tabWidget.addTab(self.view_tab, "")
 
@@ -365,20 +435,22 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 761, 26))
+        self.menubar.setGeometry(QRect(0, 0, 865, 26))
         self.menuFile = QMenu(self.menubar)
         self.menuFile.setObjectName(u"menuFile")
+        self.menuHelp = QMenu(self.menubar)
+        self.menuHelp.setObjectName(u"menuHelp")
         MainWindow.setMenuBar(self.menubar)
 
         self.menubar.addAction(self.menuFile.menuAction())
+        self.menubar.addAction(self.menuHelp.menuAction())
         self.menuFile.addAction(self.actionConnectSensor)
         self.menuFile.addAction(self.actionConnectMachine)
-        self.menuFile.addAction(self.actionExit)
-        self.menuFile.addAction(self.actionHelp)
+        self.menuHelp.addAction(self.actionHelp)
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -403,6 +475,8 @@ class Ui_MainWindow(object):
         self.checkBoxX.setText(QCoreApplication.translate("MainWindow", u"X axis", None))
         self.checkBoxZ.setText(QCoreApplication.translate("MainWindow", u"Z axis", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.config_tab), QCoreApplication.translate("MainWindow", u"Automatic", None))
+        self.label_17.setText(QCoreApplication.translate("MainWindow", u"Machine", None))
+        self.label_12.setText(QCoreApplication.translate("MainWindow", u"Relative", None))
         self.pushButtonRelativeX.setText(QCoreApplication.translate("MainWindow", u"Move", None))
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"X", None))
         self.label_3.setText(QCoreApplication.translate("MainWindow", u"Y", None))
@@ -410,8 +484,6 @@ class Ui_MainWindow(object):
         self.pushButtonRelativeY.setText(QCoreApplication.translate("MainWindow", u"Move", None))
         self.pushButtonRelativeZ.setText(QCoreApplication.translate("MainWindow", u"Move", None))
         self.label_13.setText(QCoreApplication.translate("MainWindow", u"Absolute", None))
-        self.label.setText(QCoreApplication.translate("MainWindow", u"Response: ", None))
-        self.label_12.setText(QCoreApplication.translate("MainWindow", u"Relative", None))
         self.label_14.setText(QCoreApplication.translate("MainWindow", u"X", None))
         self.label_15.setText(QCoreApplication.translate("MainWindow", u"Y", None))
         self.label_16.setText(QCoreApplication.translate("MainWindow", u"Z", None))
@@ -419,10 +491,17 @@ class Ui_MainWindow(object):
         self.pushButtonAbsoluteY.setText(QCoreApplication.translate("MainWindow", u"Move", None))
         self.pushButtonAbsoluteZ.setText(QCoreApplication.translate("MainWindow", u"Move", None))
         self.buttonOrigin.setText(QCoreApplication.translate("MainWindow", u"Origin", None))
+        self.label.setText(QCoreApplication.translate("MainWindow", u"Response: ", None))
+        self.label_18.setText(QCoreApplication.translate("MainWindow", u"Sensor", None))
+        self.buttonReadSensor.setText(QCoreApplication.translate("MainWindow", u"Read", None))
+        self.label_21.setText(QCoreApplication.translate("MainWindow", u"Total value: ", None))
+        self.label_22.setText(QCoreApplication.translate("MainWindow", u"X value: ", None))
+        self.label_23.setText(QCoreApplication.translate("MainWindow", u"Y value:", None))
+        self.label_24.setText(QCoreApplication.translate("MainWindow", u"Z value:", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.manual_tab), QCoreApplication.translate("MainWindow", u"Manual", None))
-        self.graphLoadFile.setText(QCoreApplication.translate("MainWindow", u"Load file", None))
         self.graphSelectFile.setText(QCoreApplication.translate("MainWindow", u"Select file", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.view_tab), QCoreApplication.translate("MainWindow", u"View", None))
         self.menuFile.setTitle(QCoreApplication.translate("MainWindow", u"File", None))
+        self.menuHelp.setTitle(QCoreApplication.translate("MainWindow", u"Help", None))
     # retranslateUi
 

@@ -26,7 +26,7 @@
          <enum>QTabWidget::Rounded</enum>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <property name="elideMode">
          <enum>Qt::ElideNone</enum>
@@ -541,25 +541,15 @@
           <string>View</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout_2">
-          <item row="1" column="0" colspan="3">
-           <widget class="QOpenGLWidget" name="graphic"/>
-          </item>
-          <item row="0" column="0">
-           <widget class="QLineEdit" name="graphFilePath"/>
-          </item>
-          <item row="0" column="2">
-           <widget class="QPushButton" name="graphLoadFile">
-            <property name="text">
-             <string>Load file</string>
-            </property>
-           </widget>
-          </item>
           <item row="0" column="1">
            <widget class="QPushButton" name="graphSelectFile">
             <property name="text">
              <string>Select file</string>
             </property>
            </widget>
+          </item>
+          <item row="1" column="0" colspan="3">
+           <layout class="QGridLayout" name="graph"/>
           </item>
          </layout>
         </widget>
@@ -584,10 +574,15 @@
     </property>
     <addaction name="actionConnectSensor"/>
     <addaction name="actionConnectMachine"/>
-    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
     <addaction name="actionHelp"/>
    </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuHelp"/>
   </widget>
   <action name="actionExit">
    <property name="text">

@@ -1,15 +1,19 @@
 import sys
 
 from PySide6.QtGui import QCloseEvent
-from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox
+from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox, QFileDialog
 
 from ui_window import Ui_MainWindow
 
 from MachineInterface import Machine
 from SensorInterface import EFSensor
 
+from Scatter3D import ScatterGraph
+
 from connectMachineWindow import ConnectMachineWindow
 from connectSensorWindow import ConnectSensorWindow
+
+import re
 
 def create_error_box(title, text):
     msg = QMessageBox()
@@ -24,84 +28,129 @@ def check_connected():
     create_error_box("Connection error", "Error: the device is not connected")
     return False
 
+BOX_SIZE = (100, 20, 20)
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+
+        self.setWindowTitle("Automatic sampler")
+
+        self.scatter = ScatterGraph()
+        self.ui.graph.addWidget(self.scatter)
+
+        self.ui.checkManualReading.toggled.connect(self.__toggle_checkManualReading)
+
+        self.ui.checkBoxX.toggled.connect(self.__toggle_checkBoxX)
+        self.ui.checkBoxY.toggled.connect(self.__toggle_checkBoxY)
+        self.ui.checkBoxZ.toggled.connect(self.__toggle_checkBoxZ)
+
+        self.ui.spinXPoints.valueChanged.connect(self.__calculate_total_points)
+        self.ui.spinYPoints.valueChanged.connect(self.__calculate_total_points)
+        self.ui.spinZPoints.valueChanged.connect(self.__calculate_total_points)
+
+        self.ui.actionConnectMachine.triggered.connect(self.__click_actionConnectMachine)
+        self.ui.actionConnectSensor.triggered.connect(self.__click_actionConnectSensor)
+        
+        self.ui.buttonOrigin.clicked.connect(self.__click_buttonOrigin)
+        
+        self.ui.pushButtonRelativeX.clicked.connect(self.__click_buttonMoveXRel)
+        self.ui.pushButtonRelativeY.clicked.connect(self.__click_buttonMoveYRel)
+        self.ui.pushButtonRelativeZ.clicked.connect(self.__click_buttonMoveZRel)
+        self.ui.pushButtonAbsoluteX.clicked.connect(self.__click_buttonMoveXAbs)
+        self.ui.pushButtonAbsoluteY.clicked.connect(self.__click_buttonMoveYAbs)
+        self.ui.pushButtonAbsoluteZ.clicked.connect(self.__click_buttonMoveZAbs)
+
+        self.ui.graphSelectFile.clicked.connect(self.__click_graphSelectFile)
+
     
     def closeEvent(self, event: QCloseEvent) -> None:
         if Machine.is_connected():
             Machine.disconnect()
         
         return super().closeEvent(event)
-
-def toggle_checkManualReading(state):
-    nstate = not state
-    ui.spinTotalPoints.setEnabled(nstate)
-    ui.spinXPoints.setEnabled(nstate)
-    ui.spinYPoints.setEnabled(nstate)
-    ui.spinZPoints.setEnabled(nstate)
-    ui.checkBoxX.setEnabled(nstate)
-    ui.checkBoxY.setEnabled(nstate)
-    ui.checkBoxZ.setEnabled(nstate)
-    ui.textManualPositions.setEnabled(state)
-
-def calculate_total_points():
-    x = ui.spinXPoints.value() if ui.checkBoxX.isChecked() else 1
-    y = ui.spinYPoints.value() if ui.checkBoxY.isChecked() else 1
-    z = ui.spinZPoints.value() if ui.checkBoxZ.isChecked() else 1
-
-    ui.spinTotalPoints.setValue(x*y*z)
-
-def toggle_checkBoxX(state):
-    ui.spinXPoints.setEnabled(state)
-    calculate_total_points()
-
-def toggle_checkBoxY(state):
-    ui.spinYPoints.setEnabled(state)
-    calculate_total_points()
-
-def toggle_checkBoxZ(state):
-    ui.spinZPoints.setEnabled(state)
-    calculate_total_points()
-
-def click_actionConnectMachine():
-    con = ConnectMachineWindow()
-    con.exec()
-
-def click_actionConnectSensor():
-    con = ConnectSensorWindow()
-    con.exec()
-
-def manual_movement(cmd):
-    if check_connected():
-        ui.lineResponse.setText("Moving...")
-        Machine.send_command(cmd, lambda s: ui.lineResponse.setText('OK' if s == '1' else 'NOK'))
-
-def click_buttonMoveXRel():
-    num = ui.spinRelativeX.value()
-    manual_movement(f"X{'+' if num > 0 else '-'}{num if num > 0 else -num}")
-
-def click_buttonMoveYRel():
-    num = ui.spinRelativeY.value()
-    manual_movement(f"Y{'+' if num > 0 else '-'}{num if num > 0 else -num}")
     
-def click_buttonMoveZRel():
-    num = ui.spinRelativeZ.value()
-    manual_movement(f"Z{'+' if num > 0 else '-'}{num if num > 0 else -num}")
-    
-def click_buttonMoveXAbs():
-    manual_movement(f"X{ui.spinBoxAbsoluteX.value()}")
-    
-def click_buttonMoveYAbs():
-    manual_movement(f"Y{ui.spinBoxAbsoluteY.value()}")
-    
-def click_buttonMoveZAbs():
-    manual_movement(f"Z{ui.spinBoxAbsoluteZ.value()}")
-    
-def click_buttonOrigin():
-    manual_movement("CAL")
+    def __click_graphSelectFile(self):
+        fw = QFileDialog()
+        path, _ = fw.getOpenFileName()
+
+        if path == "":
+            return
+        
+        with open(path, "rt") as file:
+            text = file.read()
+            values = [tuple(float(i) for i in m.split(",")) for m in re.findall(r"\(( *\d+ *, *\d+ *, *\d+, *\d+ *)\)", text)]
+
+            self.scatter.plot(values, BOX_SIZE)
+
+    def __toggle_checkManualReading(self, state):
+        nstate = not state
+        self.ui.spinTotalPoints.setEnabled(nstate)
+        self.ui.spinXPoints.setEnabled(nstate)
+        self.ui.spinYPoints.setEnabled(nstate)
+        self.ui.spinZPoints.setEnabled(nstate)
+        self.ui.checkBoxX.setEnabled(nstate)
+        self.ui.checkBoxY.setEnabled(nstate)
+        self.ui.checkBoxZ.setEnabled(nstate)
+        self.ui.textManualPositions.setEnabled(state)
+
+    def __calculate_total_points(self):
+        x = self.ui.spinXPoints.value() if self.ui.checkBoxX.isChecked() else 1
+        y = self.ui.spinYPoints.value() if self.ui.checkBoxY.isChecked() else 1
+        z = self.ui.spinZPoints.value() if self.ui.checkBoxZ.isChecked() else 1
+
+        self.ui.spinTotalPoints.setValue(x*y*z)
+
+    def __toggle_checkBoxX(self, state):
+        self.ui.spinXPoints.setEnabled(state)
+        self.__calculate_total_points()
+
+    def __toggle_checkBoxY(self, state):
+        self.ui.spinYPoints.setEnabled(state)
+        self.__calculate_total_points()
+
+    def __toggle_checkBoxZ(self, state):
+        self.ui.spinZPoints.setEnabled(state)
+        self.__calculate_total_points()
+
+    def __click_actionConnectMachine(self):
+        con = ConnectMachineWindow()
+        con.exec()
+
+    def __click_actionConnectSensor(self):
+        con = ConnectSensorWindow()
+        con.exec()
+
+    def __manual_movement(self, cmd):
+        if check_connected():
+            self.ui.lineResponse.setText("Moving...")
+            Machine.send_command(cmd, lambda s: self.ui.lineResponse.setText('OK' if s == '1' else 'NOK'))
+
+    def __click_buttonMoveXRel(self):
+        num = self.ui.spinRelativeX.value()
+        self.__manual_movement(f"X{'+' if num > 0 else '-'}{num if num > 0 else -num}")
+
+    def __click_buttonMoveYRel(self):
+        num = self.ui.spinRelativeY.value()
+        self.__manual_movement(f"Y{'+' if num > 0 else '-'}{num if num > 0 else -num}")
+        
+    def __click_buttonMoveZRel(self):
+        num = self.ui.spinRelativeZ.value()
+        self.__manual_movement(f"Z{'+' if num > 0 else '-'}{num if num > 0 else -num}")
+        
+    def __click_buttonMoveXAbs(self):
+        self.__manual_movement(f"X{self.ui.spinBoxAbsoluteX.value()}")
+        
+    def __click_buttonMoveYAbs(self):
+        self.__manual_movement(f"Y{self.ui.spinBoxAbsoluteY.value()}")
+        
+    def __click_buttonMoveZAbs(self):
+        self.__manual_movement(f"Z{self.ui.spinBoxAbsoluteZ.value()}")
+        
+    def __click_buttonOrigin(self):
+        self.__manual_movement("CAL")
         
 
 if __name__ == "__main__":
@@ -109,31 +158,7 @@ if __name__ == "__main__":
 
     window = MainWindow()
 
-    ui = window.ui
-
-    ui.checkManualReading.toggled.connect(toggle_checkManualReading)
-
-    ui.checkBoxX.toggled.connect(toggle_checkBoxX)
-    ui.checkBoxY.toggled.connect(toggle_checkBoxY)
-    ui.checkBoxZ.toggled.connect(toggle_checkBoxZ)
-
-    ui.spinXPoints.valueChanged.connect(calculate_total_points)
-    ui.spinYPoints.valueChanged.connect(calculate_total_points)
-    ui.spinZPoints.valueChanged.connect(calculate_total_points)
-
-    ui.actionConnectMachine.triggered.connect(click_actionConnectMachine)
-    ui.actionConnectSensor.triggered.connect(click_actionConnectSensor)
-    
-    ui.buttonOrigin.clicked.connect(click_buttonOrigin)
-    
-    ui.pushButtonRelativeX.clicked.connect(click_buttonMoveXRel)
-    ui.pushButtonRelativeY.clicked.connect(click_buttonMoveYRel)
-    ui.pushButtonRelativeZ.clicked.connect(click_buttonMoveZRel)
-    ui.pushButtonAbsoluteX.clicked.connect(click_buttonMoveXAbs)
-    ui.pushButtonAbsoluteY.clicked.connect(click_buttonMoveYAbs)
-    ui.pushButtonAbsoluteZ.clicked.connect(click_buttonMoveZAbs)
-
-    EFSensor.init()
+    # EFSensor.init()
 
     window.show()
 
