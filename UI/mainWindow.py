@@ -13,6 +13,8 @@ from Scatter3D import ScatterGraph
 from connectMachineWindow import ConnectMachineWindow
 from connectSensorWindow import ConnectSensorWindow
 
+import threading
+
 import re
 
 def create_error_box(title, text):
@@ -37,7 +39,7 @@ class MainWindow(QMainWindow):
         self.ui.setupUi(self)
 
         self.setWindowTitle("Automatic sampler")
-
+        
         self.scatter = ScatterGraph()
         self.ui.graph.addWidget(self.scatter)
 
@@ -63,7 +65,10 @@ class MainWindow(QMainWindow):
         self.ui.pushButtonAbsoluteY.clicked.connect(self.__click_buttonMoveYAbs)
         self.ui.pushButtonAbsoluteZ.clicked.connect(self.__click_buttonMoveZAbs)
 
+        self.ui.buttonBeginMovement.clicked.connect(self.__click_buttonStartMeasurement)
+        
         self.ui.graphSelectFile.clicked.connect(self.__click_graphSelectFile)
+        
 
     
     def closeEvent(self, event: QCloseEvent) -> None:
@@ -126,7 +131,7 @@ class MainWindow(QMainWindow):
     def __manual_movement(self, cmd):
         if check_connected():
             self.ui.lineResponse.setText("Moving...")
-            Machine.send_command(cmd, lambda s: self.ui.lineResponse.setText('OK' if s == '1' else 'NOK'))
+            Machine.send_command_async(cmd, lambda s: self.ui.lineResponse.setText('OK' if s == '1' else 'NOK'))
 
     def __click_buttonMoveXRel(self):
         num = self.ui.spinRelativeX.value()
@@ -151,6 +156,15 @@ class MainWindow(QMainWindow):
         
     def __click_buttonOrigin(self):
         self.__manual_movement("CAL")
+        
+    def __click_buttonStartMeasurement(self):
+        commands = [(10, 10, 10), (15, 15, 15)]
+        if Machine.is_connected():
+            self.ui.progressBar.setValue(1)
+            t = threading.Thread(target=Machine.send_sequence, args=[commands, self.ui.progressBar])
+            t.start()
+            
+        # TODO: write data to file
         
 
 if __name__ == "__main__":

@@ -25,7 +25,7 @@ void setup() {
 }
 
 void loop() {
-  if (Serial.available() > 2) {
+  if (Serial.available() >= 2) {
     String msg = Serial.readString();
     
     if (msg == "CAL") {
