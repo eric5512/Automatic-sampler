@@ -31,10 +31,13 @@ class Machine:
         Machine._conn.write(data.encode("utf-8"))
         
     def send_wait(data: str):
-        Machine.send(data)
-        while Machine._conn.in_waiting < 1:
-                    time.sleep(0.05)
-        return Machine.read()
+        if not Machine._sent:
+            Machine._sent = True
+            Machine.send(data)
+            while Machine._conn.in_waiting < 1:
+                        time.sleep(0.05)
+            Machine._sent = False
+            return Machine.read()
         
         
     def read() -> str:
@@ -54,36 +57,6 @@ class Machine:
             Machine._sent = True
             Machine.send(cmd)
             t.start()
-            
-    def send_sequence(seq: list[tuple[int, int, int]], progress_bar):
-        if not Machine._sent:
-            Machine._sent = True
-            data = []
-            count = 1
-            total = len(seq)
-            for point in seq:
-                x, y, z = point
-                
-                res = Machine.send_wait(f"X{int(x)}")
-                if res != "1":
-                    raise RuntimeError("Machine failed")
-                            
-                res = Machine.send_wait(f"Y{int(y)}")
-                if res != "1":
-                    raise RuntimeError("Machine failed")            
-                
-                res = Machine.send_wait(f"Z{int(z)}")
-                if res != "1":
-                    raise RuntimeError("Machine failed")
-                
-                # TODO: Wait a moment and measure
-                
-                progress_bar.emit(count*100//total)
-                count += 1
-            
-            Machine._sent = False
-        
-        return data
         
     def get_port_name() -> str:
         return Machine._conn.port

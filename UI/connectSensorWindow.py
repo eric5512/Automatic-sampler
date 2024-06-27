@@ -7,8 +7,6 @@ import serial.tools.list_ports as get_ports
 from SensorInterface import EFSensor
 
 class ConnectSensorWindow(QDialog):
-    _DLLPATH = ""
-
     def __init__(self):
         super(ConnectSensorWindow, self).__init__()
         self.ui = Ui_Dialog()
@@ -21,8 +19,8 @@ class ConnectSensorWindow(QDialog):
         
         if EFSensor.is_connected():
             self.ui.lineStatus.setText(f"Sensor already connected")
-        
-        self._device = EFSensor(ConnectSensorWindow._DLLPATH)
+
+        EFSensor.init(ConnectSensorWindow._DLLPATH)
 
         self.ui.buttonConnect.clicked.connect(self._clicked_buttonConnect)
 
