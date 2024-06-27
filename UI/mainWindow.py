@@ -2,6 +2,8 @@ import sys
 
 from PySide6.QtGui import QCloseEvent
 from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox, QFileDialog
+from PySide6.QtCore import Qt, Signal
+import PySide6.QtCore
 
 from ui_window import Ui_MainWindow
 
@@ -33,6 +35,8 @@ def check_connected():
 BOX_SIZE = (100, 20, 20)
 
 class MainWindow(QMainWindow):
+    progressBar = Signal(int, name="progressBar")
+    
     def __init__(self):
         super(MainWindow, self).__init__()
         self.ui = Ui_MainWindow()
@@ -69,7 +73,11 @@ class MainWindow(QMainWindow):
         
         self.ui.graphSelectFile.clicked.connect(self.__click_graphSelectFile)
         
-
+        self.progressBar.connect(self.__change_progressBar)
+        
+    @PySide6.QtCore.Slot(int)
+    def __change_progressBar(self, value):
+        self.ui.progressBar.setValue(value)
     
     def closeEvent(self, event: QCloseEvent) -> None:
         if Machine.is_connected():
@@ -158,10 +166,18 @@ class MainWindow(QMainWindow):
         self.__manual_movement("CAL")
         
     def __click_buttonStartMeasurement(self):
-        commands = [(10, 10, 10), (15, 15, 15)]
+        if self.ui.checkManualReading.isChecked():
+            text = self.ui.textManualPositions.toPlainText()
+            commands = [tuple(float(i) for i in m.split(",")) for m in re.findall(r"\(( *\d+ *, *\d+ *, *\d+ *)\)", text)]
+        else:
+            posx = [Machine.MAX_X/self.ui.spinXPoints.value()*i for i in range(self.ui.spinXPoints.value())] if self.ui.checkBoxX.isChecked() else [Machine.MAX_X/2]
+            posy = [Machine.MAX_Y/self.ui.spinYPoints.value()*i for i in range(self.ui.spinYPoints.value())] if self.ui.checkBoxY.isChecked() else [Machine.MAX_Y/2]
+            posz = [Machine.MAX_Z/self.ui.spinZPoints.value()*i for i in range(self.ui.spinZPoints.value())] if self.ui.checkBoxZ.isChecked() else [Machine.MAX_Z/2]
+            
+            commands = [(i,j,k) for i in posx for j in posy for k in posz]
         if Machine.is_connected():
             self.ui.progressBar.setValue(1)
-            t = threading.Thread(target=Machine.send_sequence, args=[commands, self.ui.progressBar])
+            t = threading.Thread(target=Machine.send_sequence, args=[commands, self.progressBar])
             t.start()
             
         # TODO: write data to file

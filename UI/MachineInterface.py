@@ -10,6 +10,10 @@ class Machine:
     _conn = None
     _sent = False
     
+    MAX_X = 400
+    MAX_Y = 163
+    MAX_Z = 163
+    
     def get_devices():
         return get_ports.comports()
     
@@ -61,20 +65,20 @@ class Machine:
                 x, y, z = point
                 
                 res = Machine.send_wait(f"X{int(x)}")
-                if res != "OK":
+                if res != "1":
                     raise RuntimeError("Machine failed")
                             
                 res = Machine.send_wait(f"Y{int(y)}")
-                if res != "OK":
+                if res != "1":
                     raise RuntimeError("Machine failed")            
                 
                 res = Machine.send_wait(f"Z{int(z)}")
-                if res != "OK":
+                if res != "1":
                     raise RuntimeError("Machine failed")
                 
                 # TODO: Wait a moment and measure
                 
-                progress_bar.setValue(count*100//total)
+                progress_bar.emit(count*100//total)
                 count += 1
             
             Machine._sent = False
