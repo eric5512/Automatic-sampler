@@ -4,7 +4,7 @@ from ui_connect import Ui_Dialog
 
 import serial.tools.list_ports as get_ports
 
-from SensorInterface import EFSensor
+from SensorProxy import SensorProxy
 
 class ConnectSensorWindow(QDialog):
     def __init__(self):
@@ -17,10 +17,10 @@ class ConnectSensorWindow(QDialog):
         
         self.ui.comboDevice.addItems(map(lambda x: x.name, self._devices))
         
-        if EFSensor.is_connected():
-            self.ui.lineStatus.setText(f"Sensor already connected")
+        sp = SensorProxy.get_instance()
 
-        EFSensor.init(ConnectSensorWindow._DLLPATH)
+        if sp.is_connected() == "True":
+            self.ui.lineStatus.setText(f"Sensor already connected")
 
         self.ui.buttonConnect.clicked.connect(self._clicked_buttonConnect)
 
@@ -28,10 +28,9 @@ class ConnectSensorWindow(QDialog):
         return get_ports.comports()
 
     def _clicked_buttonConnect(self):
-        if not EFSensor.is_connected():
-            self._device.connect(self.devices[self.ui.comboDevice.currentIndex()].name)
-            if EFSensor.is_connected():
-                self.ui.lineStatus.setText(f"Sensor connected")
+        sp = SensorProxy.get_instance()
 
-    def _get_sensor(self):
-        return self._device
+        if sp.is_connected() == "False":
+            sp.connect(self.devices[self.ui.comboDevice.currentIndex()].name)
+            if sp.is_connected() == "True":
+                self.ui.lineStatus.setText(f"Sensor connected")

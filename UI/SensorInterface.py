@@ -2,7 +2,6 @@ import ctypes
 import ctypes.wintypes
 from ctypes import wintypes, POINTER, byref, create_string_buffer
 import os
-import pickle
 import sys
 
 class EFSensor():
@@ -71,7 +70,7 @@ class EFSensor():
 
     @staticmethod
     def connect(comm_port: str) -> str:
-        result = EFSensor.__library.PMM_CreateProbe(b'probe', byref(EFSensor._handle), comm_port.encode('utf-8'))
+        result = EFSensor.__library.PMM_CreateProbe(b'EP600', byref(EFSensor._handle), comm_port.encode('utf-8'))
         
         EFSensor.handle_code(result)
         EFSensor.__connected = True
@@ -124,6 +123,7 @@ if __name__=='__main__':
             if ',' in func_name:
                 func_name, arg = [i.strip() for i in func_name.split(',')]
             
+
             func = getattr(EFSensor, func_name, None)
             if func:
                 if arg == None:

@@ -73,13 +73,13 @@ class MainWindow(QMainWindow):
         
         self.progressBar.connect(self.__change_progressBar)
     
-    def __check_connected_machine():
+    def __check_connected_machine(self):
         if Machine.is_connected():
             return True
         create_error_box("Connection error", "Error: the machine is not connected")
         return False
 
-    def __check_connected_sensor():
+    def __check_connected_sensor(self):
         if Machine.is_connected():
             return True
         create_error_box("Connection error", "Error: the sensor is not connected")
@@ -175,12 +175,12 @@ class MainWindow(QMainWindow):
             if res != "1":
                 raise RuntimeError("Machine failed")
             
-            data.append((x, y, z, self.sensorProxy.read_total_field()))
+            # data.append((x, y, z, self.sensorProxy.read_total_field()))
             
             progress.emit(count*100//total)
             count += 1
     
-        print(",".join(str(t) for t in data), file=outputFile)
+        # print(",".join(str(t) for t in data), file=open(outputFile))
 
     def __click_buttonMoveXRel(self):
         num = self.ui.spinRelativeX.value()
@@ -207,7 +207,7 @@ class MainWindow(QMainWindow):
         self.__manual_movement("CAL")
         
     def __click_buttonStartMeasurement(self):
-        if self.__check_connected_machine() and self.__check_connected_sensor():
+        if self.__check_connected_machine(): # and self.__check_connected_sensor():
             if self.ui.checkManualReading.isChecked():
                 text = self.ui.textManualPositions.toPlainText()
                 commands = [tuple(float(i) for i in m.split(",")) for m in re.findall(r"\(( *\d+ *, *\d+ *, *\d+ *)\)", text)]
